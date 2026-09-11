@@ -5,3 +5,8 @@ dist/
 *.log
 .gen-img/
 media/.js13k-images/
+
+# Le lockfile est ignore par la configuration globale de la machine. Ici il est
+# versionne volontairement: les organisateurs doivent pouvoir reconstruire le
+# jeu avec les memes versions de terser et roadroller.
+!package-lock.json
