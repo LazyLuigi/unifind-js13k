@@ -7,7 +7,9 @@ dansent sur le tempo, dans une boîte de nuit ou une fête en plein air. Il faut
 retrouver avant la fin du morceau. Tout est généré par le code: aucune image,
 aucun son échantillonné, aucune dépendance, aucune ressource externe.
 
-![Unifind](media/cover.png)
+![Unifind](media/gameplay.gif)
+
+Une salle, sa foule, et la licorne retrouvée avant la fin du morceau.
 
 ## Commandes
 
@@ -43,8 +45,9 @@ pour se déplacer dans la salle.
     tools/check.js     joue une partie complete, sur la source ou sur la sortie terser
     tools/wavedash.js  l integration Wavedash, avec un SDK double qui valide ses types
     tools/audio.js     deroule les 9 morceaux et controle la chaine audio
+    tools/pilote-capture.js   pilote automatique pour regenerer media/gameplay.gif
 
-    media/             cover et miniature de la soumission
+    media/             cover, miniature et GIF de la soumission
     lab/               laboratoires de R&D, hors du jeu
 
 ## Construire
@@ -89,6 +92,13 @@ dans la console: le jeu marche alors depuis la source et pas depuis le ZIP.
 Le double SDK de `tools/wavedash.js` refuse les mauvais types exactement comme
 le vrai, et compte les appels réussis plutôt que de se contenter d'une console
 silencieuse.
+
+## Regenerer le GIF
+
+`media/gameplay.gif` est capture, pas filme: le jeu tourne avec `Math.random`
+a graine fixe et un pas de temps impose, donc deux captures donnent le meme
+fichier. `tools/pilote-capture.js` avance dans les ecrans puis designe la
+licorne, en appelant `tap(x, y)` comme le ferait un joueur.
 
 ## Wavedash
 
