@@ -27,7 +27,7 @@ pour se déplacer dans la salle.
   jusqu'à un plafond de 1000
 - La musique sert de sablier: un morceau fait 32 mesures, soit 44 à 70 secondes
   selon le tempo
-- 9 trophées et 3 classements, visibles sur Wavedash
+- 9 trophées et un classement, visibles sur Wavedash
 
 ## Structure
 
@@ -114,11 +114,16 @@ les déclenche: le SDK ignore en silence tout identifiant inconnu. Les importer
 depuis `wavedash-achievements.json` (Achievements → Add achievement → Import
 JSON), puis vérifier avec `wavedash achievement list`.
 
-Les 3 classements sont créés à la première partie gagnée:
+Le classement `night-score` est créé à la première partie gagnée, en ordre
+décroissant, type nombre. Chaque salle gagnée rapporte:
 
-    deepest-room    salle la plus profonde atteinte      decroissant, nombre
-    fastest-find    meilleure trouvaille                 croissant, millisecondes
-    time-saved      temps epargne cumule sur la session  decroissant, nombre
+    niveau x (secondes de musique epargnees + 200)
+
+Le forfait de 200 fait qu'avancer paie toujours, même sur une trouvaille tardive;
+le facteur `niveau` fait qu'une salle lointaine vaut bien plus qu'une salle
+facile. Le total s'accumule sur la session, donc le classement récompense à la
+fois la vitesse et la profondeur. Un joueur qui recommence indéfiniment la même
+salle continue d'accumuler: c'est assumé, le coût en temps réel est sa limite.
 
 ## Budget
 
@@ -138,7 +143,7 @@ Coûts mesurés, utiles pour arbitrer:
     motifs de pelage              93 octets
     accessoires de fete          159 octets
     9 trophees et le bandeau     ~390 octets
-    3 classements                ~130 octets
+    le classement                 ~45 octets
 
 ## Laboratoires
 

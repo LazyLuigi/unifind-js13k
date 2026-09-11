@@ -105,12 +105,14 @@ function boom(o){
 var TROPHEES='FIRST_FIND CLEAN_ROOM QUICK_EYE BLINK LAST_BEAT HOT_STREAK ROOM_THREE ROOM_SIX ALL_NINE'.split(' ');
 function gagne(){
   var t=ST.fini, reste=Math.max(0,ST.lim-t), i;
-  ST.pts+=reste; ST.suite=ST.err?0:ST.suite+1;
+  /* Le score recompense la vitesse et la profondeur a la fois: chaque salle
+     rapporte le temps de musique epargne plus un forfait, le tout multiplie
+     par son numero. Une salle lointaine vaut donc bien plus qu'une salle
+     facile, et le total s'accumule sur la session. */
+  ST.pts+=ST.niv*(reste+200); ST.suite=ST.err?0:ST.suite+1;
   var C=[1,!ST.err,t<10,t<5,reste<3,ST.suite>2,ST.niv>2,ST.niv>5,ST.niv>8];
   for(i=0;i<9;i++) if(C[i]) trophee(TROPHEES[i]);
-  score('deepest-room',ST.niv,1,0);
-  score('fastest-find',t*1e3,0,2);
-  score('time-saved',ST.pts,1,0);
+  score('night-score',ST.pts,1,0);
 }
 function lumiere(t){
   var ph, e=null;
@@ -265,7 +267,10 @@ function frame(now){
     X.fillStyle='rgba(6,3,14,'+Math.min(ST.gagne?.34:.62,ST.pt*.9)+')'; X.fillRect(0,0,CW,CH);
     var n3=Math.min(44,CW/15);
     ecrit(ST.gagne?'FOUND!':'Try again!', CW/2, CH*.20, n3, ST.gagne?'#ffe14d':'#ff9ec4',1);
-    if(ST.gagne) ecrit(ST.fini.toFixed(1)+' s'+(ST.err?'   '+ST.err+' miss':''), CW/2, CH*.20+n3*.9, Math.min(22,CW/30),'#fff',1);
+    /* Le score affiche est celui qui part au classement: sans lui, le joueur
+       ne saurait pas ce qui est compare. */
+    if(ST.gagne) ecrit(ST.fini.toFixed(1)+' s'+(ST.err?'   '+ST.err+' miss':'')+'   '+(ST.pts|0)+' pts',
+                       CW/2, CH*.20+n3*.9, Math.min(22,CW/30),'#fff',1);
     if(ST.pt>5){ X.globalAlpha=bat2;
       ecrit(ST.gagne?'tap for the next song':'tap to retry', CW/2, CH*.70, Math.min(24,CW/28),'rgba(255,255,255,.95)',1);
       X.globalAlpha=1; }

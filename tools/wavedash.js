@@ -139,9 +139,12 @@ async function scenario(nom, opts, controle) {
     verifie('  requestStats() appele', d.c.stats === 1, d.c.stats + ' appel(s)');
     verifie('  aucune violation de type', d.viols.length === 0, d.viols.join(' | '));
     verifie('  des trophees sont partis', d.acquis.size >= 2, [...d.acquis].join(' '));
-    verifie('  les 3 classements sont crees', d.c.cree === 3, d.c.cree + ' creation(s)');
-    verifie('  les 3 scores sont envoyes', d.envois.length === 3,
+    verifie('  le classement est cree', d.c.cree === 1, d.c.cree + ' creation(s)');
+    verifie('  le score est envoye', d.envois.length === 1,
             d.envois.map(e => e.id + '=' + e.valeur).join(' '));
+    /* Un score nul est valide: il ne doit pas etre filtre par un `if (score)`. */
+    verifie('  le score est un entier positif', d.envois.every(e => Number.isInteger(e.valeur) && e.valeur >= 0),
+            JSON.stringify(d.envois));
     verifie('  l id lu est data.id', d.envois.every(e => /^lb-/.test(e.id)), JSON.stringify(d.envois));
     verifie('  le bandeau affiche un libelle lisible', /^[A-Z ]+$/.test(globalThis._bandeau()),
             globalThis._bandeau());
@@ -183,7 +186,7 @@ async function scenario(nom, opts, controle) {
     verifie('  aucun score envoye', d.c.envoi === 0);
   });
   await scenario('envoi de score rejete', { envoiRejette: true }, d => {
-    verifie('  les envois ont bien ete tentes', d.c.envoi === 3, d.c.envoi + ' tentative(s)');
+    verifie('  l envoi a bien ete tente', d.c.envoi === 1, d.c.envoi + ' tentative(s)');
   });
   await scenario('le SDK renvoie _id au lieu de id', { idSousTiret: true }, d => {
     verifie('  rien n est envoye a un id inexistant', d.c.envoi === 0, d.c.envoi + ' envoi(s)');
