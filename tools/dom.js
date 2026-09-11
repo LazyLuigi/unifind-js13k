@@ -1,15 +1,15 @@
-/* Faux DOM minimal, partage par les outils de test.
-   Chaque appel rend un environnement neuf, avec sa propre horloge: les tests
-   Wavedash rejouent le jeu plusieurs fois avec un SDK different a chaque fois. */
+/* Minimal fake DOM, shared by the test tools.
+   Each call returns a fresh environment with its own clock: the Wavedash
+   tests replay the game several times, with a different SDK every time. */
 
 let createCanvas;
 try { ({ createCanvas } = require('@napi-rs/canvas')); }
-catch (e) { console.error('Il manque @napi-rs/canvas. Lancer: npm install'); process.exit(1); }
+catch (e) { console.error('@napi-rs/canvas is missing. Run: npm install'); process.exit(1); }
 
-function installe(opts) {
+function install(opts) {
   opts = opts || {};
   const W = opts.W || 640, H = opts.H || 360;
-  let horloge = 1000, rappel = null;
+  let clock = 1000, callback = null;
 
   const elem = t => {
     const e = t === 'canvas' ? createCanvas(W, H) : {};
@@ -17,29 +17,29 @@ function installe(opts) {
     e.clientWidth = W; e.clientHeight = H; e.getBoundingClientRect = () => ({ left: 0, top: 0 });
     return e;
   };
-  const toile = elem('canvas');
+  const canvas = elem('canvas');
 
-  global.document = { getElementById: () => toile, createElement: elem };
+  global.document = { getElementById: () => canvas, createElement: elem };
   global.window = { devicePixelRatio: 1, addEventListener: () => {},
-                    AudioContext: function () { throw new Error('pas de son en test'); } };
-  global.performance = { now: () => horloge };
-  /* Dans un navigateur self === window. Sans Wavedash injecte, c'est la
-     situation de js13kgames.com: celle que le reglement du concours teste. */
+                    AudioContext: function () { throw new Error('no audio in tests'); } };
+  global.performance = { now: () => clock };
+  /* In a browser self === window. With no Wavedash injected, this is the
+     js13kgames.com situation: the one the contest rules are tested against. */
   global.self = global;
   if (opts.Wavedash) global.Wavedash = opts.Wavedash; else delete global.Wavedash;
-  global.requestAnimationFrame = cb => { rappel = cb; };
+  global.requestAnimationFrame = cb => { callback = cb; };
   global.setInterval = () => {}; global.setTimeout = () => {};
 
   return {
-    toile,
-    lance: src => new Function(src)(),
-    /* Le temps n'avance que par les images: les durees du jeu sont pilotables. */
-    frames(n, pas) { pas = pas === undefined ? 33 : pas;
-      for (let i = 0; i < n; i++) if (rappel) { const cb = rappel; rappel = null; horloge += pas; cb(horloge); } },
-    avance(ms) { horloge += ms; },
-    /* Vide la file des microtaches: les promesses du SDK ont alors repondu. */
-    souffle: () => new Promise(r => setImmediate(r)),
+    canvas,
+    run: src => new Function(src)(),
+    /* Time only moves on frames: the game's own durations stay drivable. */
+    frames(n, ms) { ms = ms === undefined ? 33 : ms;
+      for (let i = 0; i < n; i++) if (callback) { const cb = callback; callback = null; clock += ms; cb(clock); } },
+    advance(ms) { clock += ms; },
+    /* Drains the microtask queue: the SDK promises have answered by then. */
+    settle: () => new Promise(r => setImmediate(r)),
   };
 }
 
-module.exports = { installe };
+module.exports = { install };

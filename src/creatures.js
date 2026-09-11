@@ -1,13 +1,13 @@
-/* Lab 3: le style autocollant, décliné, dans la grammaire du Zoo Licorne.
-   Aucun trait de contour: des ellipses pleines, des accents arc-en-ciel,
-   des yeux sombres avec une goutte de lumière, une corne en dégradé doré. */
+/* Lab 3: the sticker style, in the visual grammar of the Unicorn Zoo.
+   No outline strokes: solid ellipses, rainbow accents,
+   dark eyes with a drop of light, a horn in a golden gradient. */
 
 function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 
 var RB=['#ff7a9c','#ffb057','#ffe14d','#7fdc8a','#5fc8f5','#9b8cf5','#e08cf0'];
-var ENCRE='#3b2a52', MUSEAU='#ffb3c8', JOUE='rgba(255,150,185,.45)';
+var INK='#3b2a52', SNOUT='#ffb3c8', CHEEK='rgba(255,150,185,.45)';
 
-/*  0 bw  1 bh  2 hr  3 hw  4 nk  5 er 6 es  7 mz  8 mt 9 tl 10 hn 11 mn 12 lg 13 arm 14 eye 15 laine */
+/*  0 bw  1 bh  2 hr  3 hw  4 nk  5 er 6 es  7 mz  8 mt 9 tl 10 hn 11 mn 12 lg 13 arm 14 eye 15 wool */
 var SPECIES = [
   [ .150,.175,.165,1.06,.040, 2,.52,.62, 1, 2, 1, 1,.120, 0, 0, 0],
   [ .152,.175,.165,1.06,.040, 2,.52,.62, 1, 2, 0, 1,.120, 0, 0, 0],
@@ -21,9 +21,9 @@ var SPECIES = [
   [ .200,.145,.185,1.32,.000, 0,.00,.00, 4, 0, 0, 0,.085, 0, 1, 0]
 ];
 
-/* les quatre déclinaisons */
+/* the sticker look */
 var LOOK = {
-  club: { bord:.036, volume:.16, ombre:.24, sat:80, lum:62 }
+  club: { edge:.036, volume:.16, shade:.24, sat:80, lum:62 }
 };
 
 function hsl(h,s,l){ return 'hsl('+((h%360)+360)%360+','+s+'%,'+l+'%)'; }
@@ -32,17 +32,17 @@ function makePalette(r, style, forceHue){
   var L=LOOK[style], h = forceHue!=null?forceHue:Math.floor(r()*360);
   var s=L.sat+Math.floor(r()*18), l=L.lum-Math.floor(r()*12);
   var ac = RB[Math.floor(r()*RB.length)];
-  if(r()<.10) return {                       // famille crème, comme le lion du zoo
-    hue:h, creme:1,
-    corps:'#fff6ea', haut:'#fffdf7', bas:'#f3e4d6', ventre:'#fffaf2', patte:'#f0e0d2',
-    accent:ac, museau:MUSEAU, encre:ENCRE, liseré:ac
+  if(r()<.10) return {                       // cream family, like the zoo's lion
+    hue:h, cream:1,
+    body:'#fff6ea', top:'#fffdf7', bot:'#f3e4d6', belly:'#fffaf2', paw:'#f0e0d2',
+    accent:ac, snout:SNOUT, ink:INK, rim:ac
   };
   return {
     hue:h,
-    corps: hsl(h,s,l), haut: hsl(h,s-8,Math.min(96,l+8)), bas: hsl(h,s+12,l-13),
-    ventre: hsl(h,s-16,Math.min(97,l+12)),
-    patte: hsl(h,s+8,l-8),
-    accent: ac, museau: MUSEAU, encre: ENCRE, liseré: hsl(h,72,62)
+    body: hsl(h,s,l), top: hsl(h,s-8,Math.min(96,l+8)), bot: hsl(h,s+12,l-13),
+    belly: hsl(h,s-16,Math.min(97,l+12)),
+    paw: hsl(h,s+8,l-8),
+    accent: ac, snout: SNOUT, ink: INK, rim: hsl(h,72,62)
   };
 }
 
@@ -55,9 +55,9 @@ function makeCreature(species, seed, style, forceHue){
   p.nk=s[4]; p.er=s[5]; p.es=v(6,.16); p.mz=v(7,.14); p.mt=s[8];
   p.tl=s[9]; p.hn=s[10]; p.mn=s[11]; p.lg=v(12,.12); p.arm=s[13]; p.eyeSt=s[14]; p.wool=s[15];
   p.fat=.92+r()*.20;
-  p.pois = r()<.30;                       // quelques créatures à pois arc-en-ciel
+  p.dots = r()<.30;                       // a few creatures get rainbow polka dots
   p.mouth = Math.floor(r()*3);
-  p.rot = Math.floor(r()*7);              // départ de la crinière dans l'arc-en-ciel
+  p.rot = Math.floor(r()*7);              // where the mane starts in the rainbow
   p.pal = makePalette(r, style, forceHue);
   p.m = metrics(p);
   return p;
@@ -97,70 +97,70 @@ function drawCreature(g, p, style, pose){
   g.scale(m.k,m.k); g.translate(0,m.dy/m.k);
   function vgrad(y0,y1,c0,c1){ var q=g.createLinearGradient(0,y0,0,y1); q.addColorStop(0,c0); q.addColorStop(1,c1); return q; }
 
-  /* queue */
+  /* tail */
   var tx=-bw*.86, ty=bodyCY+bh*.24;
-  if(p.tl===1){ ell(g,tx,ty,p.hr*.26,p.hr*.26); fill(g,P.ventre); }
+  if(p.tl===1){ ell(g,tx,ty,p.hr*.26,p.hr*.26); fill(g,P.belly); }
   if(p.tl===2){ capsule(g,tx,ty,tx-p.hr*.46,ty-p.hr*(up?.85:.28),p.hr*.16); fill(g,P.accent); }
   if(p.tl===3){ ell(g,tx-p.hr*.26,ty-p.hr*.20,p.hr*.50,p.hr*.30,-.55); fill(g,P.accent);
     ell(g,tx-p.hr*.48,ty-p.hr*.32,p.hr*.24,p.hr*.18,-.55); fill(g,'#fffaf2'); }
 
-  /* pattes */
+  /* legs */
   var sx=bw*.44, kick=up?.40:-.30;
   for(var s2=-1;s2<=1;s2+=2){ var fx=s2*sx+s2*p.lg*kick*.6;
-    capsule(g,s2*sx,bodyCY+bh*.55,fx,.5-footR*.75,footR*1.00); fill(g,P.patte);
-    ell(g,fx,.5-footR*.62,footR*1.12,footR*.80); fill(g,P.bas); }
+    capsule(g,s2*sx,bodyCY+bh*.55,fx,.5-footR*.75,footR*1.00); fill(g,P.paw);
+    ell(g,fx,.5-footR*.62,footR*1.12,footR*.80); fill(g,P.bot); }
 
-  /* corps */
-  ell(g,0,bodyCY,bw,bh); fill(g,vgrad(bodyCY-bh,bodyCY+bh,P.haut,P.bas));
+  /* body */
+  ell(g,0,bodyCY,bw,bh); fill(g,vgrad(bodyCY-bh,bodyCY+bh,P.top,P.bot));
   if(p.wool){ for(var q=0;q<8;q++){ var a=q/8*6.2832;
       ell(g,Math.cos(a)*bw*.80,bodyCY+Math.sin(a)*bh*.72,bw*.40,bw*.40); fill(g,'#fffdf8'); }
     ell(g,0,bodyCY,bw*.82,bh*.80); fill(g,'#fffdf8'); }
-  else { ell(g,0,bodyCY+bh*.26,bw*.58,bh*.56); fill(g,P.ventre); }
-  if(p.pois && !p.wool){ for(var d=0;d<4;d++){
+  else { ell(g,0,bodyCY+bh*.26,bw*.58,bh*.56); fill(g,P.belly); }
+  if(p.dots && !p.wool){ for(var d=0;d<4;d++){
       ell(g,(d%2?-1:1)*bw*(.30+.18*d),bodyCY-bh*.30+d*bh*.28,bw*.13,bw*.13); fill(g,RB[(p.rot+d)%7]); } }
 
-  /* bras ou ailes */
+  /* arms or wings */
   var ay=bodyCY-bh*.06;
-  if(p.arm){ for(var i=-1;i<=1;i+=2){ ell(g,i*bw*.82,bodyCY,bw*.28,bh*(up?.52:.78),i*(up?-.85:-.12)); fill(g,P.ventre); } }
+  if(p.arm){ for(var i=-1;i<=1;i+=2){ ell(g,i*bw*.82,bodyCY,bw*.28,bh*(up?.52:.78),i*(up?-.85:-.12)); fill(g,P.belly); } }
   else { var aeX=up?bw*.80:bw*.36, aeY=up?ay-bh*1.35:ay+bh*.95;
     for(var j0=-1;j0<=1;j0+=2){
-      capsule(g,j0*bw*.68,ay,j0*(bw*.72+aeX),aeY,footR*.92); fill(g,P.patte);
-      ell(g,j0*(bw*.72+aeX),aeY,footR*1.02,footR*1.02); fill(g,P.bas); } }
+      capsule(g,j0*bw*.68,ay,j0*(bw*.72+aeX),aeY,footR*.92); fill(g,P.paw);
+      ell(g,j0*(bw*.72+aeX),aeY,footR*1.02,footR*1.02); fill(g,P.bot); } }
 
-  if(p.nk>.001){ capsule(g,0,bodyCY-bh*.4,0,headCY+hry*.5,hrx*.52); fill(g,P.corps); }
+  if(p.nk>.001){ capsule(g,0,bodyCY-bh*.4,0,headCY+hry*.5,hrx*.52); fill(g,P.body); }
 
-  /* oreilles */
+  /* ears */
   var exx=hrx*.56, eyy=headCY-hry*.72, e=p.hr*p.es;
   function ears(){
     for(var i2=-1;i2<=1;i2+=2){
-      if(p.er===1){ ell(g,i2*exx,eyy,e*.54,e*.54); fill(g,P.corps); ell(g,i2*exx,eyy+e*.06,e*.30,e*.30); fill(g,P.museau); }
-      else if(p.er===2){ g.beginPath(); g.moveTo(i2*exx-e*.42,eyy+e*.34); g.quadraticCurveTo(i2*(exx+e*.10),eyy-e*1.02,i2*exx+e*.44,eyy+e*.26); g.closePath(); fill(g,P.corps);
-        g.beginPath(); g.moveTo(i2*exx-e*.18,eyy+e*.22); g.quadraticCurveTo(i2*(exx+e*.06),eyy-e*.60,i2*exx+e*.20,eyy+e*.16); g.closePath(); fill(g,P.museau); }
-      else if(p.er===3){ ell(g,i2*exx*.72,eyy-e*1.05,e*.28,e*1.20,i2*.14); fill(g,P.corps);
-        ell(g,i2*exx*.72,eyy-e*1.05,e*.14,e*.90,i2*.14); fill(g,P.museau); }
-      else if(p.er===4){ g.beginPath(); g.moveTo(i2*exx-e*.48,eyy+e*.26); g.lineTo(i2*(exx+e*.08),eyy-e*.92); g.lineTo(i2*exx+e*.46,eyy+e*.16); g.closePath(); fill(g,P.corps); }
-      else if(p.er===5){ ell(g,i2*(exx+e*.16),eyy+e*.52,e*.38,e*.62,i2*.6); fill(g,P.bas); }
+      if(p.er===1){ ell(g,i2*exx,eyy,e*.54,e*.54); fill(g,P.body); ell(g,i2*exx,eyy+e*.06,e*.30,e*.30); fill(g,P.snout); }
+      else if(p.er===2){ g.beginPath(); g.moveTo(i2*exx-e*.42,eyy+e*.34); g.quadraticCurveTo(i2*(exx+e*.10),eyy-e*1.02,i2*exx+e*.44,eyy+e*.26); g.closePath(); fill(g,P.body);
+        g.beginPath(); g.moveTo(i2*exx-e*.18,eyy+e*.22); g.quadraticCurveTo(i2*(exx+e*.06),eyy-e*.60,i2*exx+e*.20,eyy+e*.16); g.closePath(); fill(g,P.snout); }
+      else if(p.er===3){ ell(g,i2*exx*.72,eyy-e*1.05,e*.28,e*1.20,i2*.14); fill(g,P.body);
+        ell(g,i2*exx*.72,eyy-e*1.05,e*.14,e*.90,i2*.14); fill(g,P.snout); }
+      else if(p.er===4){ g.beginPath(); g.moveTo(i2*exx-e*.48,eyy+e*.26); g.lineTo(i2*(exx+e*.08),eyy-e*.92); g.lineTo(i2*exx+e*.46,eyy+e*.16); g.closePath(); fill(g,P.body); }
+      else if(p.er===5){ ell(g,i2*(exx+e*.16),eyy+e*.52,e*.38,e*.62,i2*.6); fill(g,P.bot); }
     }
   }
   if(p.er===3) ears();
 
-  /* crinière arc-en-ciel, la signature du zoo */
+  /* rainbow mane, the zoo's signature */
   if(p.mn){ for(var k=0;k<7;k++){ var a2=-2.35+k*.44;
       ell(g,Math.cos(a2)*hrx*.86,headCY+Math.sin(a2)*hry*.92,hrx*.34,hrx*.34); fill(g,RB[(k+p.rot)%7]); } }
 
-  /* tête */
-  ell(g,0,headCY,hrx,hry); fill(g,vgrad(headCY-hry,headCY+hry,P.haut,P.corps));
+  /* head */
+  ell(g,0,headCY,hrx,hry); fill(g,vgrad(headCY-hry,headCY+hry,P.top,P.body));
   if(p.er!==3) ears();
   if(p.wool){ for(var w2=0;w2<5;w2++){ var a3=-2.6+w2*.65;
       ell(g,Math.cos(a3)*hrx*.72,headCY-hry*.10+Math.sin(a3)*hry*.62,hrx*.30,hrx*.30); fill(g,'#fffdf8'); } }
 
-  /* museau, bec, bouche */
+  /* snout, beak, mouth */
   var my;
-  if(p.mt===1||p.mt===2){ ell(g,0,headCY+hry*.44,p.hr*p.mz*.62,p.hr*p.mz*.44); fill(g,P.museau); }
+  if(p.mt===1||p.mt===2){ ell(g,0,headCY+hry*.44,p.hr*p.mz*.62,p.hr*p.mz*.44); fill(g,P.snout); }
   if(p.mt===3){ var by=headCY+hry*.24,b=p.hr*p.mz;
     g.beginPath(); g.moveTo(-b*.38,by-b*.24); g.lineTo(b*.38,by-b*.24); g.lineTo(0,by+b*.82); g.closePath(); fill(g,'#ffb057'); }
 
-  /* corne dorée */
+  /* golden horn */
   if(p.hn){ var hy=headCY-hry*.92, hh=p.hr*1.28;
     var gq=g.createLinearGradient(0,hy-hh,0,hy); gq.addColorStop(0,'#fff3c4'); gq.addColorStop(1,'#f6c34a');
     g.beginPath(); g.moveTo(-p.hr*.22,hy+p.hr*.14); g.quadraticCurveTo(-p.hr*.03,hy-hh*.5,0,hy-hh);
@@ -169,21 +169,21 @@ function drawCreature(g, p, style, pose){
     for(var sk=1;sk<4;sk++){ var u=sk/4;
       g.beginPath(); g.moveTo(-p.hr*.22*(1-u),hy+p.hr*.14-hh*u+p.hr*.04); g.lineTo(p.hr*.22*(1-u),hy+p.hr*.14-hh*u-p.hr*.02); g.stroke(); } }
 
-  /* yeux */
+  /* eyes */
   var er2=Math.min(p.hr*.30, hrx*.30), eo=Math.max(hrx*.38, er2*1.20), ey=headCY-hry*.04, j;
   if(p.eyeSt===1) ey=headCY-hry*.62;
   if(p.eyeSt===2){ for(j=-1;j<=1;j+=2){ ell(g,j*eo,ey,er2*1.30,er2*1.30); fill(g,'#fffdf8'); } }
-  g.fillStyle=JOUE;
+  g.fillStyle=CHEEK;
   ell(g,-eo-er2*.62,ey+er2*.92,er2*.60,er2*.36); g.fill();
   ell(g, eo+er2*.62,ey+er2*.92,er2*.60,er2*.36); g.fill();
   for(j=-1;j<=1;j+=2){
-    ell(g,j*eo,ey,er2*.84,er2); fill(g,P.encre);
+    ell(g,j*eo,ey,er2*.84,er2); fill(g,P.ink);
     g.fillStyle='#ffffff'; ell(g,j*eo-er2*.26,ey-er2*.34,er2*.32,er2*.34); g.fill();
     g.fillStyle='rgba(255,255,255,.65)'; ell(g,j*eo+er2*.28,ey+er2*.30,er2*.15,er2*.16); g.fill();
   }
   my=ey+er2*1.30;
   if(p.mt!==3){
-    g.strokeStyle=P.encre; g.lineWidth=p.hr*.055; g.lineCap='round';
+    g.strokeStyle=P.ink; g.lineWidth=p.hr*.055; g.lineCap='round';
     if(p.mouth===0){ g.beginPath(); g.arc(0,my-p.hr*.04,p.hr*.13,.42,Math.PI-.42); g.stroke(); }
     else if(p.mouth===1){ g.beginPath(); g.arc(-p.hr*.07,my,p.hr*.075,0,Math.PI); g.arc(p.hr*.07,my,p.hr*.075,0,Math.PI); g.stroke(); }
     else { ell(g,0,my+p.hr*.03,p.hr*.075,p.hr*.065); fill(g,'#ff9ab6'); }
@@ -191,12 +191,12 @@ function drawCreature(g, p, style, pose){
   g.restore();
 }
 
-/* ---- rendu autocollant: voile irisé, volume, liseré, ombre portée ---- */
+/* ---- sticker render: iridescent veil, volume, rim, drop shadow ---- */
 function renderSprite(mk, p, style, pose, S){
   var L=LOOK[style], base=mk(S,S), bg=base.getContext('2d');
   bg.save(); bg.translate(S/2,S/2); bg.scale(S,S); drawCreature(bg,p,style,pose); bg.restore();
 
-  if(L.volume>0){                                   /* bombé: lumière en haut, ombre en bas */
+  if(L.volume>0){                                   /* domed: light at the top, shade at the bottom */
     bg.globalCompositeOperation='source-atop';
     var gv=bg.createLinearGradient(0,S*.10,0,S*.92);
     gv.addColorStop(0,'rgba(255,255,255,'+L.volume+')');
@@ -206,19 +206,19 @@ function renderSprite(mk, p, style, pose, S){
     bg.globalCompositeOperation='source-over';
   }
 
-  var sil=mk(S,S), sg=sil.getContext('2d');         /* silhouette pour les liserés */
+  var sil=mk(S,S), sg=sil.getContext('2d');         /* silhouette used for the rims */
   sg.drawImage(base,0,0); sg.globalCompositeOperation='source-in';
   sg.fillStyle='#fff'; sg.fillRect(0,0,S,S);
 
   var out=mk(S,S), og=out.getContext('2d'), i, a;
-  var R=S*L.bord;
+  var R=S*L.edge;
   for(i=0;i<20;i++){ a=i/20*6.2832; og.drawImage(sil,Math.cos(a)*R,Math.sin(a)*R); }
   og.drawImage(sil,0,0);
   og.drawImage(base,0,0);
   return out;
 }
 
-/* ombre portée du sticker, générée une fois par gabarit */
+/* sticker drop shadow, generated once per template */
 function renderShadow(mk, sprite, S, alpha){
   var c=mk(S,S), g=c.getContext('2d');
   g.drawImage(sprite,0,0); g.globalCompositeOperation='source-in';

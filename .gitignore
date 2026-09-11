@@ -1,12 +1,21 @@
 node_modules/
 dist/
 *.zip
-.js13k-check/
 *.log
+
+# Build and capture working directories
+.js13k-check/
 .gen-img/
 media/.js13k-images/
 
-# Le lockfile est ignore par la configuration globale de la machine. Ici il est
-# versionne volontairement: les organisateurs doivent pouvoir reconstruire le
-# jeu avec les memes versions de terser et roadroller.
+# R&D prototypes: kept locally, out of the submitted repository.
+lab/
+
+# Uncompressed generative sources for the cover and thumbnail. The optimised
+# PNGs under media/ are the deliverables; these originals stay local so a
+# re-run never recompresses an already-compressed file.
+media/sources/
+
+# The machine-wide gitignore skips lockfiles. This one is versioned on purpose:
+# the organisers must be able to rebuild with the same terser and roadroller.
 !package-lock.json

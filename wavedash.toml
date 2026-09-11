@@ -1,8 +1,8 @@
-# Configuration du challenge Wavedash.
-# game_id est donne par le Developer Portal : `wavedash init` le renseigne.
+# Wavedash challenge configuration.
+# game_id comes from the Developer Portal: `wavedash init` fills it in.
 game_id = ""
 
-# La cible Wavedash est la page non minifiee, produite par `npm run build`.
-# Ne pas pointer sur tout dist/ : cela embarquerait aussi la version du concours.
+# The Wavedash target is the unminified page, produced by `npm run build`.
+# Do not point at the whole dist/: that would upload the contest build too.
 upload_dir = "dist/wavedash"
 entrypoint = "index.html"
