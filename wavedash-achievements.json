@@ -1,0 +1,59 @@
+{
+  "achievements": [
+    {
+      "identifier": "FIRST_FIND",
+      "display_name": "First Find",
+      "description": "Find your first unicorn.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "CLEAN_ROOM",
+      "display_name": "Clean Room",
+      "description": "Clear a room without tapping a single wrong creature.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "QUICK_EYE",
+      "display_name": "Quick Eye",
+      "description": "Find the unicorn in under 10 seconds.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "BLINK",
+      "display_name": "Blink",
+      "description": "Find the unicorn in under 5 seconds.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "LAST_BEAT",
+      "display_name": "Last Beat",
+      "description": "Find the unicorn with less than 3 seconds of music left.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "HOT_STREAK",
+      "display_name": "Hot Streak",
+      "description": "Clear three rooms in a row without a single miss.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "ROOM_THREE",
+      "display_name": "Room Three",
+      "description": "Reach the third room, Subwoofer.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "ROOM_SIX",
+      "display_name": "Room Six",
+      "description": "Reach the sixth room, Forest.",
+      "stat_requirement": null
+    },
+    {
+      "identifier": "ALL_NINE",
+      "display_name": "All Nine",
+      "description": "Clear all nine rooms in one night.",
+      "stat_requirement": null
+    }
+  ],
+  "stats": []
+}

@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.zip
+.js13k-check/
+*.log
+.gen-img/
+media/.js13k-images/

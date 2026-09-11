@@ -1,0 +1,17 @@
+{
+  "name": "unifind",
+  "version": "1.0.0",
+  "description": "js13kGames 2026 entry: find the unicorn before the music ends",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "release": "node build.js --best 6",
+    "fast": "node build.js --fast",
+    "check": "node tools/check.js && node tools/check.js --min && node tools/wavedash.js && node tools/audio.js"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^0.1.80",
+    "roadroller": "2.1.0",
+    "terser": "5.51.2"
+  }
+}
