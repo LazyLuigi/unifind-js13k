@@ -1,6 +1,6 @@
 # Wavedash challenge configuration.
 # game_id comes from the Developer Portal: `wavedash init` fills it in.
-game_id = ""
+game_id = "j97ftfsjpqty56ds9rw5q4zep18e6weh"
 
 # The Wavedash target is the unminified page, produced by `npm run build`.
 # Do not point at the whole dist/: that would upload the contest build too.

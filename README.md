@@ -141,3 +141,16 @@ Measured costs, useful when trading features against bytes:
     party props                  159 bytes
     9 achievements and banner    ~390 bytes
     the leaderboard               ~45 bytes
+
+### Current version 
+
+```
+dist/wavedash/index.html   67309 B readable
+terser                     47679 B
+roadroller                 17298 B
+dist/js13k/index.html      17509 B
+zip -9                     13537 B  ->  advzip 13227 B
+----------------------------------------
+unifind.zip                13227 B  /  13312 max
+WITHIN BUDGET. Margin: 85 B.
+```
